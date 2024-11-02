@@ -1,0 +1,13 @@
+.is-fullwidth {
+  width: 100%;
+}
+
+.note {
+  height: 250px;
+}
+
+@media (max-width: 768px) {
+  .note {
+    height: auto;
+  }
+}
