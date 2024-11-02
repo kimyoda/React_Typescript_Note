@@ -1,4 +1,4 @@
-import { Note } from "components";
+import { Note, SaveNote } from "./components";
 import { useState } from "react";
 import { NoteInterface } from "types";
 
@@ -32,7 +32,9 @@ function App() {
           );
         })}
         <div className="tile is-3 p-2">
-          <div className="box is-fullwidth"></div>
+          <div className="box is-fullwidth">
+            <SaveNote setNotes={setNotes} saveCallback={() => {}} />
+          </div>
         </div>
       </div>
     </div>
