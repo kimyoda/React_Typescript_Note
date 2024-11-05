@@ -1,4 +1,4 @@
-import { Note, SaveNote } from "./components";
+import { Note, NoteDeleteModal, SaveNote } from "./components";
 import { useState } from "react";
 import { NoteInterface } from "types";
 
@@ -11,6 +11,19 @@ function App() {
   const onNoteDeleteClick = (note: NoteInterface) => {
     setNoteToDelete(note);
   };
+
+  const onDeleteModalClose = () => {
+    setNoteToDelete(null);
+  };
+
+  const onNoteDelete = () => {
+    if (!noteToDelete) return;
+    setNotes((prevNotes) =>
+      prevNotes.filter((note) => note.id !== noteToDelete.id)
+    );
+    setNoteToDelete(null);
+  };
+
   const onNoteEditClick = (note: NoteInterface) => {
     setNoteToEdit(note);
   };
@@ -37,6 +50,9 @@ function App() {
           </div>
         </div>
       </div>
+      {noteToDelete && (
+        <NoteDeleteModal onClose={onDeleteModalClose} onDelete={onNoteDelete} />
+      )}
     </div>
   );
 }
