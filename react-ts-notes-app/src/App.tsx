@@ -1,9 +1,15 @@
-import { Note, NoteDeleteModal, SaveNote } from "./components";
+import { Note, NoteDeleteModal, NoteEditModal, SaveNote } from "./components";
 import { useState } from "react";
 import { NoteInterface } from "types";
+import {
+  getNotesFromLocalStorage,
+  updatedNotesInLocalStorage,
+} from "./components/services";
 
 function App() {
-  const [notes, setNotes] = useState<NoteInterface[]>([]);
+  const [notes, setNotes] = useState<NoteInterface[]>(
+    getNotesFromLocalStorage()
+  );
 
   const [noteToDelete, setNoteToDelete] = useState<NoteInterface | null>(null);
   const [noteToEdit, setNoteToEdit] = useState<NoteInterface | null>(null);
@@ -18,14 +24,22 @@ function App() {
 
   const onNoteDelete = () => {
     if (!noteToDelete) return;
-    setNotes((prevNotes) =>
-      prevNotes.filter((note) => note.id !== noteToDelete.id)
-    );
+    setNotes((prevNotes) => {
+      const updatedNotes = prevNotes.filter(
+        (note) => note.id !== noteToDelete.id
+      );
+      updatedNotesInLocalStorage(updatedNotes);
+      return updatedNotes;
+    });
     setNoteToDelete(null);
   };
 
   const onNoteEditClick = (note: NoteInterface) => {
     setNoteToEdit(note);
+  };
+
+  const onEditModalClose = () => {
+    setNoteToEdit(null);
   };
 
   return (
@@ -50,6 +64,13 @@ function App() {
           </div>
         </div>
       </div>
+      {noteToEdit && (
+        <NoteEditModal
+          note={noteToEdit}
+          onClose={onEditModalClose}
+          setNotes={setNotes}
+        />
+      )}
       {noteToDelete && (
         <NoteDeleteModal onClose={onDeleteModalClose} onDelete={onNoteDelete} />
       )}
